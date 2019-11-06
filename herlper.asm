@@ -1,7 +1,4 @@
-;!source "math.asm"
-
 !macro paintChar xpos, ypos {
-;final = $1000
     ; initial position
     lda #$00
     sta $02
@@ -14,7 +11,6 @@ add40:
     clc				; clear carry
 	lda $02
 	adc #$28 ; 40 dec
-    ;tay
     sta $02
 	lda $03
 	adc #$00
@@ -26,7 +22,6 @@ xpart:
     clc				; clear carry
 	lda $02
 	adc xpos
-    ;tay
     sta $02
 	lda $03
 	adc #$00
@@ -38,7 +33,6 @@ xpart:
 }
 
 !macro getChar xpos, ypos {
-;final = $1000
     ; initial position
     lda #$00
     sta $02
@@ -51,7 +45,6 @@ add40s:
     clc				; clear carry
 	lda $02
 	adc #$28 ; 40 dec
-    ;tay
     sta $02
 	lda $03
 	adc #$00
@@ -63,13 +56,11 @@ xparts:
     clc				; clear carry
 	lda $02
 	adc xpos
-    ;tay
     sta $02
 	lda $03
 	adc #$00
     sta $03
     ; render
     ldy #$00
-    ;lda #$03 ; A
     lda ($02),y
 }
