@@ -8,28 +8,33 @@ xpos = $1004
 ypos = $1005
 floor = $1006
 fallstate = $1007
+floorchar = $1008
 
 *=$0801
     !byte $0c,$08,$0a,$00,$9e,$32,$30,$36,$34,$00,$00,$00,$00
     ;jmp $0810
 *=$0810
     jsr clearscreen
-    jsr irq_init
     jsr setupbackground
     jsr initSprites
 
+    lda #$2b
+    sta floorchar
+
     sta fallstate ; 0 falling, 1 not
     
-    lda #16
+    lda #249
     sta $d000    ; set x coordinate to 40
     ; test setting the high bit for the sprite
-    lda #$01
-    sta $D010
+    ;lda #$01
+    ;sta $D010
 
     lda #50; + (24 * 6) + 8
     sta $d001    ; set y coordinate to 40
 
     jsr load_floor
+
+    jsr irq_init ; setup last
 loop:
     jmp loop
 
@@ -54,43 +59,45 @@ initSprites:
     rts
 
 load_floor:
-    lda #$02
+    lda floorchar
     ; basic floor
     sta $770 ;1904
     sta $771
     sta $772
-    sta $773
-    sta $774
-    sta $775
-    sta $776
-    sta $777
-    sta $778
-    sta $779
-    sta $77A
-    sta $77B
-    sta $77C
-    sta $77D
-    sta $77E
-    sta $77F
-    sta $780
-    sta $781
-    sta $782
-    sta $783
-    sta $784
-    sta $785
-    sta $786
-    sta $787
-    sta $788
+    ;sta $773
+    ;sta $774
+    ;sta $775
+    ; sta $776
+    ; sta $777
+    ; sta $778
+    ; sta $779
+    ; sta $77A
+    ; sta $77B
+    ; sta $77C
+    ; sta $77D
+    ; sta $77E
+    ; sta $77F
+    ; sta $780
+    ; sta $781
+    ; sta $782
+    ; sta $783
+    ; sta $784
+    ; sta $785
+    ; sta $786
+    ; sta $787
+    ; sta $788
 
-    sta $78d
-    sta $790
+     sta $78c ; 248
+     ;sta $78d ; 256
+     ;sta $78e 
+     ;sta $78f
 
-    lda #$03
-    sta $791
-    sta $792
-    sta $793
-    sta $794
-    sta $795
+    ; lda #$03
+    ; sta $791
+    ; sta $792
+    ; sta $793
+    ; sta $794
+    ; sta $795
     rts
 
 
@@ -112,7 +119,8 @@ update_sprite_location:
     inc $d001
 skip:
     lda #8
-    sta $09
+    sta $09  ; used for the condition.
+    
     lda $d001 ; ypos
     
     sbc #24     ; 24 down because of border
@@ -130,14 +138,15 @@ dd:
     lda $d000
     cmp $09 ; used for if the high bit is set and this is less than 8
     bcc db
-    sbc #8 ; border
+    ;sbc #24 ; border instead of this subtract 3 cols at the end
 subx:
+    inx
     sbc #$8    ; subtract 8 until we go negative (division)
     cmp $09
     bcc db
     ;BMI db
     ;beq dd
-    inx
+    
     jmp subx
 db:
     ; if the ninth bit is set also add n columes
@@ -145,18 +154,21 @@ db:
     and #$01 ; b00000001
     beq nohighbit
     txa
-    adc #29 ; add 29 columns onto x
+    adc #32 ; add 29 columns onto x
     tax
 nohighbit:
+    txa 
+    sbc #2 ; count for the border on the left.
+    tax
     sty ypos
     stx xpos
-    ldx #$02
-    stx floor
+    ;ldx #$02
+    ;stx floor
     ;+paintChar xpos, ypos
     +getChar xpos,ypos
     ; compare with flooor
     sta $79A ; show the char in A on screen
-    cmp floor
+    cmp floorchar
     beq stop
     lda #$00
     sta fallstate
