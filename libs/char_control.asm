@@ -1,4 +1,9 @@
-!macro paintChar xpos, ypos, char {
+
+;;;;;;;;;;;;;;
+;; Print char
+; ======================
+printChar:
+    ; xpos, ypos, alpha
     ; initial position
     lda #$00
     sta $02
@@ -29,11 +34,14 @@ xpart: ; add in the xpos
     sta $03
     ; render
     ldy #$00
-    lda char ; character code
+    lda alpha ; character code
     sta ($02),y
-}
+    rts
 
-!macro getChar xpos, ypos {
+; ============
+; xpos, ypos
+; A = character
+getChar:
     ; initial position
     lda #$00
     sta $02
@@ -67,38 +75,4 @@ xpartss:
     ; render
     ldy #$00
     lda ($02),y
-}
-
-
-!macro getChar2 xpos, ypos {
-    ; initial position
-    lda #$00
-    sta $02
-    lda #$04
-    sta $03
-; for each row (ypos) add 40
-    ldx ypos
-add40s:
-    beq xparts
-    clc				; clear carry
-	lda $02
-	adc #$28 ; 40 dec
-    sta $02
-	lda $03
-	adc #$00
-    sta $03
-    dex
-    jmp add40s
-xparts:
-    ; add in the xpos
-    clc				; clear carry
-	lda $02
-	adc xpos
-    sta $02
-	lda $03
-	adc #$00
-    sta $03
-    ; render
-    ldy #$00
-    lda ($02),y
-}
+    rts

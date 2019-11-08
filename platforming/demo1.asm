@@ -1,14 +1,15 @@
 !source "sprite-data.asm"
-;!source "math.asm"
-!source "herlper.asm"
-!source "screen.asm"
-!source "irq.asm"
+!source "../libs/char_control.asm"
+!source "../libs/screen.asm"
+!source "../libs/irq.asm"
 
 xpos = $1004
 ypos = $1005
 floor = $1006
 fallstate = $1007
 floorchar = $1008
+
+alpha = $1009
 
 *=$0801
     !byte $0c,$08,$0a,$00,$9e,$32,$30,$36,$34,$00,$00,$00,$00
@@ -165,7 +166,7 @@ nohighbit:
     ;ldx #$02
     ;stx floor
     ;+paintChar xpos, ypos
-    +getChar xpos,ypos
+    jsr getChar
     ; compare with flooor
     sta $79A ; show the char in A on screen
     cmp floorchar
