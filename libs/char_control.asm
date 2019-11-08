@@ -6,8 +6,7 @@
 ; -------------------------
 printChar:
     jsr getChar
-    ;tax
-    lda alpha ; character code
+    lda alpha ; character code we want to write
     sta ($02),y
 
 ; -------------------------
@@ -16,13 +15,12 @@ printChar:
 ; returns: character in A reg
 ; -------------------------
 getChar:
-    ; initial position
     lda #$00
     sta $02
     lda #$04
     sta $03 
     ldx ypos
-    dex ; we want it zero indexed
+    dex ; we want it zero indexed but row/col are passed in 1 indexed
 -:
     beq +
     clc				; clear carry
