@@ -69,7 +69,7 @@ verify:
     beq good  ; chars match
     ldx alpha ; save alpha char
     stx old_alpha
-    lda #$23
+    lda #42 ; bad character
     sta alpha
     jsr printChar
     lda old_alpha

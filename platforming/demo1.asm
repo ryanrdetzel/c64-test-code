@@ -88,6 +88,7 @@ load_floor:
     ; sta $787
     ; sta $788
 
+    sta $764
      sta $78c ; 248
      ;sta $78d ; 256
      ;sta $78e 
@@ -121,14 +122,16 @@ update_sprite_location:
 skip:
     lda #8
     sta $09  ; used for the condition.
+    lda #12
+    sta $0a
     
     lda $d001 ; ypos
     
-    sbc #24     ; 24 down because of border
+    sbc #16     ; 24 down because of border
     ldy #$00  ; counter for ypos
 suby:
     ; a less than 8, branch
-    cmp $09
+    cmp $0a
     bcc dd
     sbc #$8    ; subtract 8 until we go negative (division)
     iny
@@ -159,7 +162,7 @@ db:
     tax
 nohighbit:
     txa 
-    sbc #2 ; count for the border on the left.
+    sbc #1 ; count for the border on the left.
     tax
     sty ypos
     stx xpos
